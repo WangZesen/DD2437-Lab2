@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from data import *
 from net import *
+import math
 
 def plot1D(X, y, label):
 	x = np.array(X).T.tolist()[0]
@@ -11,16 +12,21 @@ def plot1D(X, y, label):
 
 # For 3.1
 
-trainX, trainY = generate()
-testX, testY = generate(st = 0.05)
+kind = 0
+trainX, trainY = generate(kind = kind)
+testX, testY = generate(kind = kind, st = 0.05)
 
-n = 5
-net = network(n)
+errors = []
+x = []
+for sigma in range(3):
+	for n in range(5, 12):
+		net = network(n)
+		for i in range(n):
+			net.nodes[i].param[0] = [math.pi / (n - 1) * i]
+			net.nodes[i].param[1] = 5 ** (- sigma + 1)
+		net.leastSquares(trainX, trainY)
+		x.append(n)
+		errors.append(net.calError(testX, testY))
 
-net.leastSquares(trainX, trainY)
-
-plot1D(testX, testY, "test")
-plot1D(testX, net.forward(testX), "output")
-plt.legend()
+	plt.plot(x, errors, label = str(sigma))
 plt.show()
-

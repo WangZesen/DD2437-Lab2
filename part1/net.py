@@ -11,6 +11,7 @@ def dist(x, y):
 class node:
 	dim = 1
 	sigma = 1.0
+
 	def __init__(self):
 		self.param = [[random.uniform(-10, 10) for i in range(node.dim)], node.sigma]
 	def radial(self, x):
@@ -31,10 +32,16 @@ class network:
 		npTrainY = np.array([trainY]).T
 		self.w = np.dot(np.dot(np.dot(pinv(phi), pinv(phi.T)), phi.T), npTrainY)
 		assert self.w.shape == (self.n, 1)
-	def forward(self, trainX):
-		dataNum = len(trainX)
+	def calError(self, testX, testY):
+		results = self.forward(testX)
+		count = 0
+		for i in range(len(results)):
+			count = count + abs(results[i] - testY[i])
+		return count / len(results)
+	def forward(self, testX):
+		dataNum = len(testX)
 		phi = np.zeros((dataNum, self.n))
 		for i in range(dataNum):
 			for j in range(self.n):
-				phi[i][j] = self.nodes[j].radial(trainX[i])
+				phi[i][j] = self.nodes[j].radial(testX[i])
 		return np.dot(phi, self.w).T.tolist()[0]
