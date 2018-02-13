@@ -106,8 +106,10 @@ if __name__ == "__main__":
 		trainX, trainY = generate(kind = kind)
 		testX, testY = generate(kind = kind, st = 0.05)
 		
-		net.CLDeltaRule(trainX, trainY, deadNode = True)
+		net.CL(trainX, trainY, deadNode = True)
 		
+		# Show the result of competition
+		''' 
 		x = []
 		y = [0 for i in range(n)]
 		for i in range(n):
@@ -116,3 +118,11 @@ if __name__ == "__main__":
 		plot1D(trainX, trainY, 'train')
 		plt.plot(x, y, 'o')
 		plt.show()
+		'''
+		
+		net.deltaRule(trainX, trainY)
+		plot1D(testX, testY, 'test')
+		plot1D(testX, net.forward(testX), 'network')
+		plt.show()
+		
+		

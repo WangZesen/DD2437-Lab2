@@ -51,7 +51,7 @@ class network:
 			self.w = self.w + delta / batch
 			
 			
-	def CLDeltaRule(self, trainX, trainY, lr = 0.1, maxIter = 5000, deadNode = False):
+	def CL(self, trainX, trainY, lr = 0.1, maxIter = 5000, deadNode = False):
 		if deadNode == False:
 			for k in range(maxIter):
 				index = random.randint(0, len(trainX) - 1)
