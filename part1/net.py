@@ -2,21 +2,25 @@ import math, random
 import numpy as np
 from numpy.linalg import pinv
 
-def dist(x, y):
-	count = 0
-	for i in range(len(x)):
-		count = count + (x[i] - y[i]) ** 2
-	return count
-
 class node:
 	dim = 1
 	sigma = 1.0
 
 	def __init__(self):
 		self.param = [[random.uniform(-10, 10) for i in range(node.dim)], node.sigma]
+	def dist(self, x):
+		assert len(x) == node.dim
+		count = 0
+		for i in range(len(x)):
+			count = count + (x[i] - self.param[0][i]) ** 2
+		return count		
 	def radial(self, x):
 		assert len(x) == node.dim
-		return math.e ** (- dist(x, self.param[0]) / 2 / (self.param[1] ** 2))
+		return math.e ** (- self.dist(x) / 2 / (self.param[1] ** 2))
+	def update(self, x, eta = 0.1):
+		assert len(x) == node.dim
+		for i in range(node.dim):
+			self.param[0][i] = self.param[0][i] + (x[i] - self.param[0][x]) * eta
 
 class network:
 	def __init__(self, n = 5):
@@ -45,7 +49,26 @@ class network:
 				e = trainY[index] - np.dot(vectorPhi.T, self.w)
 				delta = delta + lr * e * vectorPhi
 			self.w = self.w + delta / batch
-		pass
+			
+			
+	def CLDeltaRule(self, trainX, trainY, lr = 0.1, maxIter = 3000):
+		# batch size is fixed to 1
+		for k in range(maxIter):
+			samples = random.sample(range(len(trainX)), batch)
+			index = random.randint(0, len(trainX) - 1)
+			vectorPhi = np.zeros((self.n, 1))
+			minDist = 1e+20
+			minNode = -1
+			for i in range(self.n):
+				if self.nodes[i].dist(trainX[index]) < minDist:
+					minDist = self.nodes[i].dist(trainX[index])
+					minNode = i
+			self.nodes[minNode].update()
+			e = trainY[index] - np.dot(vectorPhi.T, self.w)
+			delta = delta + lr * e * vectorPhi
+			self.w = self.w + delta / batch
+			
+			
 	def calError(self, testX, testY):
 		results = self.forward(testX)
 		count = 0
