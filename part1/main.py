@@ -106,6 +106,13 @@ if __name__ == "__main__":
 		trainX, trainY = generate(kind = kind)
 		testX, testY = generate(kind = kind, st = 0.05)
 		
-		net.CLDeltaRule(trainX, trainY)
-		pass
-
+		net.CLDeltaRule(trainX, trainY, deadNode = True)
+		
+		x = []
+		y = [0 for i in range(n)]
+		for i in range(n):
+			x.append(net.nodes[i].param[0][0])
+			print (net.nodes[i].param[0])
+		plot1D(trainX, trainY, 'train')
+		plt.plot(x, y, 'o')
+		plt.show()

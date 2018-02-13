@@ -7,7 +7,7 @@ class node:
 	sigma = 1.0
 
 	def __init__(self):
-		self.param = [[random.uniform(-10, 10) for i in range(node.dim)], node.sigma]
+		self.param = [[random.uniform(0, 10) for i in range(node.dim)], node.sigma]
 	def dist(self, x):
 		assert len(x) == node.dim
 		count = 0
@@ -58,7 +58,7 @@ class network:
 				dists = np.array([self.nodes[i].dist(trainX[index]) for i in range(self.n)])
 				self.nodes[np.argmin(dists)].update(trainX[index], lr)
 		else:
-			coWinners = 2
+			coWinners = 5
 			for k in range(maxIter):
 				index = random.randint(0, len(trainX) - 1)
 				dists = np.array([self.nodes[i].dist(trainX[index]) for i in range(self.n)])
