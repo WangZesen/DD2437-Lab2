@@ -32,7 +32,7 @@ class network:
 		npTrainY = np.array([trainY]).T
 		self.w = np.dot(np.dot(np.dot(pinv(phi), pinv(phi.T)), phi.T), npTrainY)
 		assert self.w.shape == (self.n, 1)
-	def deltaRule(self, trainX, trainY, lr = 0.05, maxIter = 1000, batch = 1):
+	def deltaRule(self, trainX, trainY, lr = 0.1, maxIter = 3000, batch = 1):
 		assert batch <= len(trainX)
 		for k in range(maxIter):
 			samples = random.sample(range(len(trainX)), batch)
