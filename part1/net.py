@@ -51,7 +51,7 @@ class network:
 			self.w = self.w + delta / batch
 			
 			
-	def CLDeltaRule(self, trainX, trainY, lr = 0.1, maxIter = 3000, deadNode = False):
+	def CLDeltaRule(self, trainX, trainY, lr = 0.1, maxIter = 5000, deadNode = False):
 		if deadNode == False:
 			for k in range(maxIter):
 				index = random.randint(0, len(trainX) - 1)
@@ -63,9 +63,9 @@ class network:
 				index = random.randint(0, len(trainX) - 1)
 				dists = np.array([self.nodes[i].dist(trainX[index]) for i in range(self.n)])
 				args = np.argsort(dists)
-				self.nodes[args[0]].update(trainX, lr)
+				self.nodes[args[0]].update(trainX[index], lr)
 				for i in range(1, 1 + coWinners):
-					self.nodes[args[i]].update(trainX, lr / 5)
+					self.nodes[args[i]].update(trainX[index], lr / 5)
 			
 	def calError(self, testX, testY):
 		results = self.forward(testX)
