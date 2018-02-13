@@ -1,5 +1,20 @@
-import math, csv
+import math, random
 import numpy as np
+
+class node:
+	dim = 2
+	def __init__(self):
+		self.pos = [random.uniform(0, 1) for i in range(node.dim)]
+	def dist(self, x):
+		assert node.dim == len(x)
+		count = 0
+		for i in range(node.dim):
+			count = count + (self.pos[i] - x[i]) ** 2
+		return count
+	def update(self, x, eta = 0.2):
+		assert node.dim == len(x)
+		for i in range(node.dim):
+			self.pos[i] = self.pos[i] + (x[i] - self.pos[i]) * eta
 
 class topology:
 	def __init__(self, mode = 0, n = 5):
@@ -28,9 +43,17 @@ class topology:
 						neighbours.append(i * self.a + j)
 			return neighbours
 			
+def getAuxilData(dataSet = 0):
+	if dataSet == 0:
+		file = open('data/animalnames.txt', 'r')
+		rawData = file.readlines()
+		data = []
+		for i in range(32):
+			data.append(rawData[i].split('\'')[1])
+		return data
+
 
 def getData(dataSet = 0):
-	data = None
 	if dataSet == 0:
 		file = open('data/animals.dat', 'r')
 		rawData = file.readlines()[0].split(',')
@@ -57,4 +80,4 @@ def getData(dataSet = 0):
 		return data
 
 if __name__ == "__main__":
-	print (getData(2))
+	print (getAuxilData(0))
