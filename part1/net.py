@@ -56,10 +56,16 @@ class network:
 			for k in range(maxIter):
 				index = random.randint(0, len(trainX) - 1)
 				dists = np.array([self.nodes[i].dist(trainX[index]) for i in range(self.n)])
-				self.nodes[np.argmin(dists)].update(trainX[index])
+				self.nodes[np.argmin(dists)].update(trainX[index], lr)
 		else:
+			coWinners = 2
 			for k in range(maxIter):
-				pass			
+				index = random.randint(0, len(trainX) - 1)
+				dists = np.array([self.nodes[i].dist(trainX[index]) for i in range(self.n)])
+				args = np.argsort(dists)
+				self.nodes[args[0]].update(trainX, lr)
+				for i in range(1, 1 + coWinners):
+					self.nodes[args[i]].update(trainX, lr / 5)
 			
 	def calError(self, testX, testY):
 		results = self.forward(testX)

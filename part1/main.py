@@ -106,7 +106,6 @@ if __name__ == "__main__":
 		trainX, trainY = generate(kind = kind)
 		testX, testY = generate(kind = kind, st = 0.05)
 		
-		
 		net.CLDeltaRule(trainX, trainY)
 		pass
 
