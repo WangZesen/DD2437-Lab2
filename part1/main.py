@@ -100,6 +100,13 @@ if __name__ == "__main__":
 		
 	# For 3.3
 	if argv[1] == '2':
+		kind = 0
+		n = 10
+		net = network(n)
+		trainX, trainY = generate(kind = kind)
+		testX, testY = generate(kind = kind, st = 0.05)
 		
+		
+		net.CLDeltaRule(trainX, trainY)
 		pass
 

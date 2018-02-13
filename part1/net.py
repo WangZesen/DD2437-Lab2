@@ -20,7 +20,7 @@ class node:
 	def update(self, x, eta = 0.1):
 		assert len(x) == node.dim
 		for i in range(node.dim):
-			self.param[0][i] = self.param[0][i] + (x[i] - self.param[0][x]) * eta
+			self.param[0][i] = self.param[0][i] + (x[i] - self.param[0][i]) * eta
 
 class network:
 	def __init__(self, n = 5):
@@ -52,23 +52,14 @@ class network:
 			
 			
 	def CLDeltaRule(self, trainX, trainY, lr = 0.1, maxIter = 3000, deadNode = False):
-		# batch size is fixed to 1
 		if deadNode == False:
 			for k in range(maxIter):
-				samples = random.sample(range(len(trainX)), batch)
 				index = random.randint(0, len(trainX) - 1)
-				vectorPhi = np.zeros((self.n, 1))
-				minDist = 1e+20
-				minNode = -1
-				for i in range(self.n):
-					if self.nodes[i].dist(trainX[index]) < minDist:
-						minDist = self.nodes[i].dist(trainX[index])
-						minNode = i
-				self.nodes[minNode].update(trainX[index])
-				e = trainY[index] - np.dot(vectorPhi.T, self.w)
-				delta = delta + lr * e * vectorPhi
-				self.w = self.w + delta / batch
-			
+				dists = np.array([self.nodes[i].dist(trainX[index]) for i in range(self.n)])
+				self.nodes[np.argmin(dists)].update(trainX[index])
+		else:
+			for k in range(maxIter):
+				pass			
 			
 	def calError(self, testX, testY):
 		results = self.forward(testX)
