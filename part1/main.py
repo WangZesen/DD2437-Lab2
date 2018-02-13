@@ -55,5 +55,32 @@ if __name__ == "__main__":
 		
 	# For 3.2		
 	if argv[1] == '1':
+		kind = 0
+		trainX, trainY = generate(kind = kind, noise = 0.1)
+		testX, testY = generate(kind = kind, st = 0.05, noise = 0.1)
 
+
+		for sigma in range(3):
+			errors = []
+			x = []
+			for n in range(4, 10):
+				net = network(n)
+				for i in range(n):
+					net.nodes[i].param[0] = [2 * math.pi / (n - 1) * i]
+					net.nodes[i].param[1] = 2 ** (- sigma + 1)
+				#net.leastSquares(trainX, trainY)
+				net.deltaRule(trainX, trainY)
+				x.append(n)
+				errors.append(net.calError(testX, testY))
+
+			plt.plot(x, errors, label = str(2 ** (- sigma + 1)))
+		plt.legend()
+		plt.show()	
+
+		
+		
+	# For 3.3
+	if argv[1] == '2':
+		
+		pass
 
