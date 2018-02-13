@@ -16,7 +16,7 @@ class node:
 		self.param = [[random.uniform(-10, 10) for i in range(node.dim)], node.sigma]
 	def radial(self, x):
 		assert len(x) == node.dim
-		return math.e ** (- dist(x, self.param[0]) / 2 / self.param[1] ** 2)
+		return math.e ** (- dist(x, self.param[0]) / 2 / (self.param[1] ** 2))
 
 class network:
 	def __init__(self, n = 5):
@@ -32,14 +32,19 @@ class network:
 		npTrainY = np.array([trainY]).T
 		self.w = np.dot(np.dot(np.dot(pinv(phi), pinv(phi.T)), phi.T), npTrainY)
 		assert self.w.shape == (self.n, 1)
-	def deltaRule(self, trainX, trainY, lr = 0.001, maxIter = 10000):
+	def deltaRule(self, trainX, trainY, lr = 0.05, maxIter = 1000, batch = 1):
+		assert batch <= len(trainX)
 		for k in range(maxIter):
-			vectorPhi = np.zeros((self.n, 1))
-			for i in range(self.n):
-				index = random.randint(1, self.n)
-				vectorPhi[i][0] = self.nodes[i].radial(trainX[index])
-			e = trainY[index] - np.dot(vectorPhi.T, self.w)
-			self.w = self.w + lr * e * vectorPhi.T
+			samples = random.sample(range(len(trainX)), batch)
+			delta = np.zeros((self.n, 1))
+			for it in range(batch):
+				index = samples[it]
+				vectorPhi = np.zeros((self.n, 1))
+				for i in range(self.n):
+					vectorPhi[i][0] = self.nodes[i].radial(trainX[index])
+				e = trainY[index] - np.dot(vectorPhi.T, self.w)
+				delta = delta + lr * e * vectorPhi
+			self.w = self.w + delta / batch
 		pass
 	def calError(self, testX, testY):
 		results = self.forward(testX)
@@ -54,3 +59,16 @@ class network:
 			for j in range(self.n):
 				phi[i][j] = self.nodes[j].radial(testX[i])
 		return np.dot(phi, self.w).T.tolist()[0]
+	def squareForward(self, testX):
+		dataNum = len(testX)
+		phi = np.zeros((dataNum, self.n))
+		for i in range(dataNum):
+			for j in range(self.n):
+				phi[i][j] = self.nodes[j].radial(testX[i])
+		results = np.dot(phi, self.w).T.tolist()[0]		
+		for i in range(dataNum):
+			if results[i] > 0:
+				results[i] = 1
+			else:
+				results[i] = -1
+		return results

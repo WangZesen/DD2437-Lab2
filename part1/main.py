@@ -24,7 +24,8 @@ for sigma in range(3):
 		for i in range(n):
 			net.nodes[i].param[0] = [2 * math.pi / (n - 1) * i]
 			net.nodes[i].param[1] = 2 ** (- sigma + 1)
-		net.leastSquares(trainX, trainY)
+		#net.leastSquares(trainX, trainY)
+		net.deltaRule(trainX, trainY)
 		x.append(n)
 		errors.append(net.calError(testX, testY))
 
@@ -32,13 +33,16 @@ for sigma in range(3):
 plt.legend()
 plt.show()
 
+
+
+# For debug
 '''
-n = 7
+n = 10
 net = network(n)
 
 for i in range(n):
 	net.nodes[i].param[0] = [2 * math.pi / (n - 1) * i]
-
+	#net.nodes[i].param[1] = 0.5
 
 net.deltaRule(trainX, trainY)
 plot1D(testX, testY, 'test')
