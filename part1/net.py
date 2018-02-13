@@ -32,7 +32,7 @@ class network:
 		npTrainY = np.array([trainY]).T
 		self.w = np.dot(np.dot(np.dot(pinv(phi), pinv(phi.T)), phi.T), npTrainY)
 		assert self.w.shape == (self.n, 1)
-	def deltaRule(self, trainX, trainY, lr = 0.03, maxIter = 1000):
+	def deltaRule(self, trainX, trainY, lr = 0.001, maxIter = 10000):
 		for k in range(maxIter):
 			vectorPhi = np.zeros((self.n, 1))
 			for i in range(self.n):
