@@ -16,15 +16,16 @@ kind = 0
 trainX, trainY = generate(kind = kind)
 testX, testY = generate(kind = kind, st = 0.05)
 
-errors = []
-x = []
+
 for sigma in range(3):
-	for n in range(5, 12):
+	errors = []
+	x = []
+	for n in range(2, 10):
 		net = network(n)
 		for i in range(n):
 			net.nodes[i].param[0] = [math.pi / (n - 1) * i]
-			net.nodes[i].param[1] = 5 ** (- sigma + 1)
-		net.leastSquares(trainX, trainY)
+			net.nodes[i].param[1] = 2 ** (- sigma + 1)
+		net.deltaRule(trainX, trainY)
 		x.append(n)
 		errors.append(net.calError(testX, testY))
 
