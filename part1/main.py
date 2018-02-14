@@ -65,32 +65,68 @@ if __name__ == "__main__":
 		plt.show()
 		'''
 		
-	# For 3.2		
+	# For 3.2
 	if argv[1] == '1':
 		kind = 0
-		trainX, trainY = generate(kind = kind, noise = 0.1)
-		testX, testY = generate(kind = kind, st = 0.05)
-		
-		
-		for sigma in range(1, 3):
+		trainX, trainY = generate(kind=kind, noise=0.1)
+		# testX, testY = generate(kind=kind, st=0.05)
+
+		# for sigma in [1, 0.5, 0.2]:
+		# 	errors = []
+		# 	x = []
+		#
+		# 	for n in [5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20]:
+		# 		net = network(n)
+		# 		for i in range(n):
+		# 			net.nodes[i].param[0] = [2 * math.pi / (n - 1) * i]
+		# 			net.nodes[i].param[1] = sigma
+		# 		# net.leastSquares(trainX, trainY)
+		# 		net.deltaRule(trainX, trainY, batch=1, maxIter=5000, lr=0.1)
+		# 		x.append(n)
+		# 		errors.append(net.calError(trainX, trainY))
+		#
+		#
+		# 	# random distribution of RBF positioning
+		# 	'''
+		# 	for n in [5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20]:
+		# 		errors_sum = 0
+		# 		for j in range(5):
+		# 			net = network(n)
+		# 			for i in range(n):
+		# 				# net.nodes[i].param[0] = [2 * math.pi / (n - 1) * i]
+		# 				net.nodes[i].param[0] = [random.uniform(0, 2 * math.pi)]
+		# 				net.nodes[i].param[1] = sigma
+		# 			net.leastSquares(trainX, trainY)
+		# 			# net.deltaRule(trainX, trainY, batch=1, maxIter=5000, lr=0.05)
+		# 			errors_sum += net.calError(trainX, trainY)
+		# 		x.append(n)
+		# 		errors.append(errors_sum)
+		# 	'''
+
+		# change eta (learning rate)
+		for lr in [0.3, 0.1, 0.05, 0.01]:
+			sigma = 0.5
+			n = 10
 			errors = []
 			x = []
-			for n in range(10, 20):
+
+			for iters in range(0, 3001, 50):
 				net = network(n)
 				for i in range(n):
 					net.nodes[i].param[0] = [2 * math.pi / (n - 1) * i]
-					net.nodes[i].param[1] = 2 ** (- sigma + 1)
-				#net.leastSquares(trainX, trainY)
-				net.deltaRule(trainX, trainY)
-				x.append(n)
+					net.nodes[i].param[1] = sigma
+				# net.leastSquares(trainX, trainY)
+				net.deltaRule(trainX, trainY, batch=1, maxIter=iters, lr=lr)
+				x.append(iters)
 				errors.append(net.calError(trainX, trainY))
 
-			plt.plot(x, errors, label = str(2 ** (- sigma + 1)))
+			plt.plot(x, errors, label=lr)
 		plt.legend()
-		plt.show()	
-		
-		
-		
+		plt.xlabel("Number of iters")
+		plt.ylabel("Error")
+		# plt.yscale('log')
+		plt.show()
+
 		# For visualize one case
 		'''
 		n = 150
@@ -101,7 +137,7 @@ if __name__ == "__main__":
 			#net.nodes[i].param[1] = 0.5
 
 		net.deltaRule(trainX, trainY, lr = 0.001, maxIter = 20000)
-		
+
 		plot1D(testX, testY, 'test')
 		#plot1D(testX, net.squareForward(testX), 'normalized')
 		plot1D(testX, net.forward(testX), 'network')
