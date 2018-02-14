@@ -11,7 +11,7 @@ if argv[1] == '0': # Task 4.1
 	n = 32
 	m = 100
 	maxIter = 100
-	maxDist = 25
+	maxDist = 30
 	node.dim = 84
 	
 	data = getData(0)
@@ -22,10 +22,10 @@ if argv[1] == '0': # Task 4.1
 		for i in range(n):
 			dists = np.array([nodes[j].dist(data[i]) for j in range(m)])
 			minNode = np.argmin(dists)
-			neighbours = nodeMap.neighbour(minNode)
-			curDist = round(maxDist - maxDist / (maxIter - 1) * it)
+			curDist = round(maxDist - maxDist / (maxIter - 1) * it)			
+			neighbours = nodeMap.neighbour(minNode, curDist)
 			for j in neighbours:
-				nodes[j].update(data[i], curDist)
+				nodes[j].update(data[i])
 
 	names = getAuxilData(0)
 	results = []
@@ -75,8 +75,8 @@ if argv[1] == "1":
 if argv[1] == "2":
 	n = 349
 	m = 100
-	maxIter = 20
-	maxDist = 4
+	maxIter = 500
+	maxDist = 5
 	node.dim = 31
 	
 	data = getData(2)
@@ -98,7 +98,7 @@ if argv[1] == "2":
 		results.append(np.argmin(dists))
 	
 	args = np.argsort(np.array(results))
-	district, party, sex = getAuxilData(2)
+	district, party, gender = getAuxilData(2)
 
 	# District
 	print ("Result for district")
@@ -116,28 +116,33 @@ if argv[1] == "2":
 	
 	# Party
 	print ("Result for party")
-	votes = [[[0 for i in range(7)] for j in range(10)] for k in range(10)]
+	votes = [[[0 for i in range(8)] for j in range(10)] for k in range(10)]
 	
 	for i in range(n):
 		row = results[args[i]] // 10
 		col = results[args[i]] - row * 10
-		votes[row][col][party[i] - 1] += 1
-	
+		votes[row][col][party[i]] += 1
+	colors = ['red', 'black', 'yellow', 'green', 'aqua', 'blue', 'purple', 'orange']
 	for i in range(10):
 		for j in range(10):
+			plt.plot([i], [j], 's', markersize = 24, color = colors[np.argmax(np.array(votes[i][j]))])
 			print (str(np.argmax(np.array(votes[i][j]))).ljust(3), end = " ")
 		print ()	
-
+	plt.show()
 	# Sex
-	print ("Result for sex")
+	print ("Result for gender")
 	votes = [[[0 for i in range(2)] for j in range(10)] for k in range(10)]
 	
 	for i in range(n):
 		row = results[args[i]] // 10
 		col = results[args[i]] - row * 10
-		votes[row][col][sex[i] - 1] += 1
+		votes[row][col][gender[i]] += 1
+	
+	colors = ['red', 'black']
 	
 	for i in range(10):
 		for j in range(10):
+			plt.plot([i], [j], 's', markersize = 24, color = colors[np.argmax(np.array(votes[i][j]))])
 			print (str(np.argmax(np.array(votes[i][j]))).ljust(3), end = " ")
-		print ()	
+		print ()
+	plt.show()	

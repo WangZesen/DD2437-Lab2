@@ -40,7 +40,7 @@ class topology:
 			c = x - r * self.a
 			for i in range(self.a):
 				for j in range(self.a):
-					if abs(i - r) + abs(c - j) <= dist:
+					if abs(i - r) ** 2 + abs(c - j) ** 2 <= dist ** 2:
 						neighbours.append(i * self.a + j)
 			return neighbours
 			
