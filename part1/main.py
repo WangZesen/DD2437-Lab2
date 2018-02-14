@@ -34,7 +34,7 @@ if __name__ == "__main__":
 			plt.plot(x, errors, label = str(2 ** (- sigma + 1)))
 		plt.legend()
 		plt.xlabel("Number of units")
-        	plt.ylabel("Error")
+		plt.ylabel("Error")
 		plt.show()
 		
 		'''
