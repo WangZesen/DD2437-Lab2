@@ -12,58 +12,58 @@ def plot1D(X, y, label):
 if __name__ == "__main__":
 
 	# For 3.1
-    if argv[1] == '0':
-        kind = 1
-        trainX, trainY = generate(kind=kind)
-        testX, testY = generate(kind=kind, st=0.05)
+    	if argv[1] == '0':
+		kind = 1
+		trainX, trainY = generate(kind=kind)
+		testX, testY = generate(kind=kind, st=0.05)
 
-        # for sigma in range(3):
-        for sigma in [1, 0.5, 0.2]:
-            errors = []
-            errors_t = []
-            x = []
-            N = len(trainX)
-            for n in [5, 6, 7, 8, 9, 10, 11, 12]:
-            # for n in [N]:
-                net = network(n)
-                for i in range(n):
-                    net.nodes[i].param[0] = [2 * math.pi / (n - 1) * i]
-                    # net.nodes[i].param[0] = trainX[i]
-                    # net.nodes[i].param[1] = 2 ** (- sigma)
-                    net.nodes[i].param[1] = sigma
-                net.leastSquares(trainX, trainY)
-                # net.deltaRule(trainX, trainY, batch=1, maxIter=5000, lr=0.05)
-                x.append(n)
-                errors.append(net.calError(testX, testY))
-                print(net.calError(testX, testY))
-                errors_t.append(net.calError(trainX, trainY))
+		# for sigma in range(3):
+		for sigma in [1, 0.5, 0.2]:
+			errors = []
+			errors_t = []
+			x = []
+			N = len(trainX)
+			for n in [5, 6, 7, 8, 9, 10, 11, 12]:
+			# for n in [N]:
+				net = network(n)
+				for i in range(n):
+					net.nodes[i].param[0] = [2 * math.pi / (n - 1) * i]
+					# net.nodes[i].param[0] = trainX[i]
+					# net.nodes[i].param[1] = 2 ** (- sigma)
+					net.nodes[i].param[1] = sigma
+				net.leastSquares(trainX, trainY)
+				# net.deltaRule(trainX, trainY, batch=1, maxIter=5000, lr=0.05)
+				x.append(n)
+				errors.append(net.calError(testX, testY))
+				print(net.calError(testX, testY))
+				errors_t.append(net.calError(trainX, trainY))
 
-            plt.plot(x, errors, label=sigma)
-            # plt.plot(x, errors_t, 'k:', label=sigma)
-        plt.legend()
-        plt.xlabel("Number of units")
-        plt.ylabel("Error")
-        # plt.ylim((0, 0.2))
-        plt.yscale('log')
-        plt.show()
+			plt.plot(x, errors, label=sigma)
+			# plt.plot(x, errors_t, 'k:', label=sigma)
+		plt.legend()
+		plt.xlabel("Number of units")
+		plt.ylabel("Error")
+		# plt.ylim((0, 0.2))
+		plt.yscale('log')
+		plt.show()
 
-        '''
-        # For visualize one case
-        n = 7
-        net = network(n)
+		'''
+		# For visualize one case
+		n = 7
+		net = network(n)
 
-        for i in range(n):
-            net.nodes[i].param[0] = [2 * math.pi / (n - 1) * i]
-            #net.nodes[i].param[1] = 0.5
+		for i in range(n):
+			net.nodes[i].param[0] = [2 * math.pi / (n - 1) * i]
+			#net.nodes[i].param[1] = 0.5
 
-        # net.deltaRule(trainX, trainY)
-        net.leastSquares(trainX, trainY)
-        plot1D(testX, testY, 'data')
-        plot1D(testX, net.squareForward(testX), 'transform', marker='.')
-        plot1D(testX, net.forward(testX), 'output', marker='g')
-        plt.legend()
-        plt.show()
-        '''
+		# net.deltaRule(trainX, trainY)
+		net.leastSquares(trainX, trainY)
+		plot1D(testX, testY, 'data')
+		plot1D(testX, net.squareForward(testX), 'transform', marker='.')
+		plot1D(testX, net.forward(testX), 'output', marker='g')
+		plt.legend()
+		plt.show()
+		'''
 		
 	# For 3.2		
 	if argv[1] == '1':
