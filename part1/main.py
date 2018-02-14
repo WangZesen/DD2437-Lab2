@@ -146,31 +146,45 @@ if __name__ == "__main__":
 		plt.show()
 		'''
 		
-	# For 3.3
-	if argv[1] == '2':
+	if argv[1] == '2': # For 3.3.1 Competitive Learning
 		kind = 0
-		n = 10
-		net = network(n)
-		trainX, trainY = generate(kind = kind)
-		testX, testY = generate(kind = kind, st = 0.05)
-		
+		trainX, trainY = generate(kind=kind, noise = 0.0)
+		testX, testY = generate(kind=kind, st=0.05)
+
+		testN = 10
+		net = network(testN)
 		net.CL(trainX, trainY, deadNode = True)
-		
-		# Show the result of competition
-		''' 
-		x = []
-		y = [0 for i in range(n)]
-		for i in range(n):
-			x.append(net.nodes[i].param[0][0])
-			print (net.nodes[i].param[0])
+		for i in range(testN):
+			plt.plot([net.nodes[i].param[0][0]], [0], 'ro')
 		plot1D(trainX, trainY, 'train')
-		plt.plot(x, y, 'o')
+		plt.show()
+
+		'''
+		# for sigma in range(3):
+		for sigma in [1, 0.5, 0.2]:
+			errors = []
+			errors_t = []
+			x = []
+			N = len(trainX)
+			for n in range(5, 13):
+			# for n in [N]:
+				net = network(n)
+				for i in range(n):
+					net.nodes[i].param[1] = sigma
+				net.CL(trainX, trainY)
+				net.leastSquares(trainX, trainY)
+				# net.deltaRule(trainX, trainY, batch=1, maxIter=5000, lr=0.05)
+				x.append(n)
+				errors.append(net.calError(testX, testY))
+				print(net.calError(trainX, trainY))
+				errors_t.append(net.calError(testX, testY))
+
+			plt.plot(x, errors_t, label=sigma)
+			# plt.plot(x, errors_t, 'k:', label=sigma)
+		plt.legend()
+		plt.xlabel("Number of units")
+		plt.ylabel("Error")
+		# plt.ylim((0, 0.2))
+		plt.yscale('log')
 		plt.show()
 		'''
-		
-		net.deltaRule(trainX, trainY)
-		plot1D(testX, testY, 'test')
-		plot1D(testX, net.forward(testX), 'network')
-		plt.show()
-		
-		
