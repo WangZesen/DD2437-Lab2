@@ -12,7 +12,7 @@ def plot1D(X, y, label):
 if __name__ == "__main__":
 
 	# For 3.1
-    	if argv[1] == '0':
+	if argv[1] == '0':
 		kind = 1
 		trainX, trainY = generate(kind=kind)
 		testX, testY = generate(kind=kind, st=0.05)
