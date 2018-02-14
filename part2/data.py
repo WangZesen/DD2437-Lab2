@@ -13,6 +13,7 @@ class node:
 		return count
 	def update(self, x, eta = 0.2):
 		assert node.dim == len(x)
+		# print (x, self.pos)		
 		for i in range(node.dim):
 			self.pos[i] = self.pos[i] + (x[i] - self.pos[i]) * eta
 
@@ -38,7 +39,7 @@ class topology:
 			r = x // self.a
 			c = x - r * self.a
 			for i in range(self.a):
-				for j in range(self.b):
+				for j in range(self.a):
 					if abs(i - r) + abs(c - j) <= dist:
 						neighbours.append(i * self.a + j)
 			return neighbours
@@ -51,6 +52,26 @@ def getAuxilData(dataSet = 0):
 		for i in range(32):
 			data.append(rawData[i].split('\'')[1])
 		return data
+	if dataSet == 2:
+		file = open('data/mpdistrict.dat', 'r')
+		rawData = file.readlines()
+		district = []
+		for i in range(349):
+			district.append(int(rawData[i]))
+		
+		file = open('data/mpparty.dat', 'r')
+		rawData = file.readlines()
+		party = []
+		for i in range(349):
+			party.append(int(rawData[i]))		
+				
+		file = open('data/mpsex.dat', 'r')
+		rawData = file.readlines()
+		sex = []
+		for i in range(349):
+			sex.append(int(rawData[i]))		
+		
+		return district, party, sex
 
 
 def getData(dataSet = 0):
